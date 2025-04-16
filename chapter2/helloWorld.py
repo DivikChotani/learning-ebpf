@@ -9,7 +9,7 @@ int hello(void *ctx) {
         bpf_trace_printk("Hello World!");
     }
     else{
-        bpf_trace_printk("Hello Gay!");
+        bpf_trace_printk("Hello Odd!");
     }
     return 0;
 }
