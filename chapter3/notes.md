@@ -69,6 +69,10 @@ Always detach programs before unloading them.
 XDP provides extremely fast packet processing by intercepting packets at the earliest possible point in the network stack, immediately after they arrive at the network interface.
 
 # Debugging and inspecting eBPF tools
+To list all ebpf programs
+```bash
+sudo bpftool prog show name hello --pretty
+```
 
 After running hello-mapy.py from chapter 2
 
@@ -141,3 +145,34 @@ bpftool map dump name counter_table
     }
 ]
 ```
+
+# Tail calls vs function calls
+Normal fucntion calls: Executed within the same program
+
+loading a program with a normal function call
+sudo bpftool prog list 
+61: cgroup_skb  name sd_fw_ingress  tag 6deef7357e7b4530  gpl
+	loaded_at 2025-04-17T23:32:43-0700  uid 0
+	xlated 64B  jited 144B  memlock 4096B
+only one program loaded it 
+
+Tail calls: A jump to a different eBPF program
+loading a program with a tail calls
+sudo bpftool prog list 
+92: raw_tracepoint  name sys_enter  tag 3faded8cb3a25abe  gpl
+	loaded_at 2025-04-18T14:50:57-0700  uid 0
+	xlated 128B  jited 272B  memlock 4096B  map_ids 19
+	btf_id 118
+93: raw_tracepoint  name ignore_opcode  tag a04f5eef06a7f555  gpl
+	loaded_at 2025-04-18T14:50:57-0700  uid 0
+	xlated 16B  jited 112B  memlock 4096B
+	btf_id 118
+94: raw_tracepoint  name hello_exec  tag 931f578bd09da154  gpl
+	loaded_at 2025-04-18T14:50:57-0700  uid 0
+	xlated 112B  jited 200B  memlock 4096B
+	btf_id 118
+95: raw_tracepoint  name hello_timer  tag 4db4fdc0ba974dc5  gpl
+	loaded_at 2025-04-18T14:50:57-0700  uid 0
+	xlated 352B  jited 360B  memlock 4096B
+	btf_id 118
+every tail call function loaded in
