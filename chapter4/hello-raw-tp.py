@@ -46,7 +46,7 @@ b = BPF(text=program)
 b["config"][ct.c_int(0)] = ct.create_string_buffer(b"Hey root!")
 b["config"][ct.c_int(501)] = ct.create_string_buffer(b"Hi user 501!")
 
-b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
+link = b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
 
  
 def print_event(cpu, data, size):  
@@ -54,5 +54,10 @@ def print_event(cpu, data, size):
    print(f"{data.pid} {data.uid} {data.command.decode()} {data.message.decode()}")
  
 b["output"].open_ring_buffer(print_event) 
-while True:   
-   b.ring_buffer_poll()
+try:
+   while True:
+      b.ring_buffer_poll()
+except KeyboardInterrupt:
+   print("Detaching and exiting...")
+finally:
+   link.close()
