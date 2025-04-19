@@ -117,5 +117,5 @@ int hello(void * ctx):
   46: (85) call bpf_perf_event_output#-123528
  ; return 0;
   47: (b7) r0 = 0
-  48: (95) exit
+  48: (95) exit}
 ```
