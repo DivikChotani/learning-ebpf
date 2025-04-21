@@ -26,7 +26,7 @@ int hello(struct bpf_raw_tracepoint_args *ctx) {
 """
 
 b = BPF(text=program)
-b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
+link = b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
 
 # Attach to a tracepoint that gets hit for all syscalls 
 # b.attach_raw_tracepoint(tp="sys_enter", fn_name="hello")
@@ -35,6 +35,9 @@ try:
         sleep(1)
 except KeyboardInterrupt:
     print("\nSyscall counts by UID:")
+
     
     for k, v in b['counter_table'].items():
         print(f"UID: {k.value}: {v.value}")
+    link.close()
+

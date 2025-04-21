@@ -71,6 +71,7 @@ XDP provides extremely fast packet processing by intercepting packets at the ear
 # Debugging and inspecting eBPF tools
 To list all ebpf programs
 ```bash
+sudo bpftool prog show
 sudo bpftool prog show name hello --pretty
 ```
 
