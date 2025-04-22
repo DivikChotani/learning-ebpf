@@ -54,6 +54,13 @@ int main()
         return 1;
 	}
 
+    __u32 uid = 0;
+    struct user_msg_t m;
+    strncpy(m.message, "Hi sudo user", sizeof(m.message));
+    m.message[sizeof(m.message) - 1] = '\0'; 
+    bpf_map__update_elem(skel->maps.my_config, &uid, sizeof(uid), &m, sizeof(m), BPF_ANY);
+
+
 	while (true) {
 		err = perf_buffer__poll(pb, 100 /* timeout, ms */);
 		// Ctrl-C gives -EINTR
